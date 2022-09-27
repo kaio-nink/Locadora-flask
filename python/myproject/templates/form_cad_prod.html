@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mercado</title>
+</head>
+<body>
+    <h1>Dados do Produto</h1>
+    <form action="/cadastrar_produto" method="POST">
+        <label for="id">ID:</label><br>
+        <input type="text" name="id" id="id" required><br>
+        <label for="nome">Nome:</label><br>
+        <input type="text" name="nome" id="nome" required><br>
+        <label for="preco_unitario">PRECO UNITARIO:</label><br>
+        <input type="text" name="preco_unitario" id="preco_unitario" required><br>
+        <label for="qtd">QUANTIDADE:</label><br>
+        <input type="text" name="qtd" id="qtd" required><br>
+        <input type="submit" value="Cadastrar">
+    </form>
+</body>
+</html>
