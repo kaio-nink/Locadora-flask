@@ -8,21 +8,22 @@ create table cliente
 
 create table tipo_carro
 (
-    modelo varchar(15),
-    valorDiaria numeric(4,2),
-    valorSemanal numeric(7,2),
-    primary key(modelo)
+    tipo varchar(15),
+    valorDiaria numeric(4,2) not null,
+    valorSemanal numeric(7,2) not null,
+    primary key(tipo)
 );
 
 create table carro
 (
     id_carro int auto_increment,
-    modelo varchar(15),
-    marca varchar(10),        
-    ano varchar(4),
+    tipo varchar(15),
+    modelo varchar(15) not null,
+    marca varchar(10) not null,        
+    ano varchar(4) not null,
     disponivel Boolean not null,   
     primary key (id_carro),
-    foreign key(modelo) references tipo_carro(modelo)
+    foreign key(tipo) references tipo_carro(tipo)
 );
 
 create table aluguel
