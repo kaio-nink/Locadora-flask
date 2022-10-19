@@ -1,0 +1,9 @@
+procedure:
+    cadastro de cliente
+    cadastro de carro
+    cadastro de aluguel
+view:
+    devolução com calculo de dias
+
+trigger:
+    status do carro(aluguel, devolução)
