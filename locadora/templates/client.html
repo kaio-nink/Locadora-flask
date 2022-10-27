@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+
+{% block title %}Clientes{% endblock %}
+
+{%block content%}
+  <div id="client" class="tab-content">
+    <form action="" method="">
+      <div class="tab-pane">
+        <div class="row">
+          <div class="col-sm-12">
+            <h4 class="info-text">Cadastro de Cliente</h4>
+          </div>
+          <div class="col-sm-5 col-sm-offset-1">
+            <div class="form-group label-floating">
+              <label class="control-label">Nome</label>
+              <input type="text" class="form-control">
+            </div>
+          </div>
+          <div class="col-sm-5">
+            <div class="form-group label-floating">
+              <label class="control-label">Telefone</label>
+              <input type="tel" class="form-control">
+            </div>
+          </div>
+          <div class="col-sm-5 col-sm-offset-8">
+            <div class="form-group label-floating">
+              <div class="input-group">
+                <button type="submit" class="btn btn-primary">Cadastrar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+    </form>
+  </div>
+{%endblock%}
