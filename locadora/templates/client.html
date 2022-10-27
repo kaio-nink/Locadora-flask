@@ -4,7 +4,7 @@
 
 {%block content%}
   <div id="client" class="tab-content">
-    <form action="" method="">
+    <form action="{{url_for('registerClient')}}" method="POST">
       <div class="tab-pane">
         <div class="row">
           <div class="col-sm-12">
@@ -13,13 +13,13 @@
           <div class="col-sm-5 col-sm-offset-1">
             <div class="form-group label-floating">
               <label class="control-label">Nome</label>
-              <input type="text" class="form-control">
+              <input type="text" class="form-control" name="nome" id="nome">
             </div>
           </div>
           <div class="col-sm-5">
             <div class="form-group label-floating">
               <label class="control-label">Telefone</label>
-              <input type="tel" class="form-control">
+              <input type="tel" class="form-control" name="telefone" id="telefone">
             </div>
           </div>
           <div class="col-sm-5 col-sm-offset-8">
@@ -32,4 +32,25 @@
         </div>
     </form>
   </div>
+  <div>
+    <table class="">
+      <thead>
+        <tr>
+          <th scope="col">Id</th>
+          <th scope="col">Nome</th>
+          <th scope="col">Telefone</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for client in data %}
+          <tr>
+            <td>{{client[0]}}</td>
+            <td>{{client[1]}}</td>
+            <td>{{client[2]}}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
 {%endblock%}

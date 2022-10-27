@@ -1,38 +1,59 @@
-CREATE DATABASE IF NOT EXISTS Locadora;
-USE Locadora;
+create database if not exists Locadora;
+use Locadora;
 
-CREATE TABLE IF NOT EXISTS cliente
+
+create table if not exists Cliente
 (
-    id_cliente INT AUTO_INCREMENT,
-    nome VARCHAR(30) NOT NULL,
-    telefone VARCHAR(11),
-    PRIMARY KEY(id_cliente)
+    id_cliente int auto_increment,
+    nome varchar(30) not null,
+    telefone varchar(12),
+    primary key(id_cliente)
 );
 
-CREATE TABLE IF NOT EXISTS carro
+create table if not exists Tipo_carro
 (
-    id_carro INT AUTO_INCREMENT,
-    disponivel Boolean NOT NULL,
-    PRIMARY KEY (id_carro)
+    tipo varchar(15),
+    valorDiaria numeric(4,2) not null,
+    valorSemanal numeric(7,2) not null,
+    primary key(tipo)
 );
 
-CREATE TABLE IF NOT EXISTS tipo_carro
+create table if not exists Carro
 (
-    id_carro INT,
-    modelo VARCHAR(10),
-    marca VARCHAR(10),
-    ano VARCHAR(4),
-    valorDiaria NUMERIC(4,2),
-    PRIMARY KEY(id_carro, modelo),
-    FOREIGN KEY(id_carro) REFERENCES carro(id_carro)
+    id_carro int auto_increment,
+    tipo varchar(15),
+    modelo varchar(15) not null,
+    marca varchar(10) not null,        
+    ano varchar(4) not null,
+    disponivel Boolean not null,   
+    primary key (id_carro),
+    foreign key(tipo) references Tipo_carro(tipo)
 );
 
-CREATE TABLE IF NOT EXISTS aluguel
+create table if not exists Aluguel
 (
-    id_cliente INT,
-    id_carro INT,
-    dataInicial DATE,
-    PRIMARY KEY(id_cliente, id_carro, dataInicial),
-    FOREIGN KEY(id_cliente) REFERENCES cliente(id_cliente),
-    FOREIGN KEY(id_carro) REFERENCES carro(id_carro)
+    id_cliente int,
+    id_carro int,
+    dataInicial date,
+    numDias int,
+    primary key(id_cliente, id_carro, dataInicial),
+    foreign key(id_cliente) references Cliente(id_cliente),
+    foreign key(id_carro) references Carro(id_carro)
 );
+
+alter table Cliente auto_increment=1;
+alter table Carro auto_increment=1;
+
+
+delimiter ;;
+create procedure cadastrarCliente(in nome varchar(30), in telefone varchar(12))
+    begin
+        insert into Cliente(nome, telefone) values(nome, telefone);
+    end;;
+
+
+delimiter ;;
+create procedure cadastrarCarro(in tipo varchar(15), in modelo varchar(15), in marca varchar(10), in ano varchar(4), in disponivel boolean)
+    begin
+        insert into Carro(tipo, modelo, marca, ano, disponivel) values(tipo, modelo, marca, ano, disponivel);
+    end;;

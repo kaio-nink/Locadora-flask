@@ -4,7 +4,7 @@
 
 {%block content%}
   <div id="car" class="tab-content">
-    <form action="client.html" method="">
+    <form action="{{url_for('registerCar')}}" method="POST">
       <div class="tab-pane">
         <div class="row">
           <div class="col-sm-12">
@@ -13,25 +13,25 @@
           <div class="col-sm-5 col-sm-offset-1">
             <div class="form-group label-floating">
               <label class="control-label">Marca</label>
-              <input type="text" class="form-control">
+              <input type="text" class="form-control" name="marca" id="marca">
             </div>
           </div>
           <div class="col-sm-5">
             <div class="form-group label-floating">
               <label class="control-label">Modelo</label>
-              <input type="text" class="form-control">
+              <input type="text" class="form-control" name="modelo" id="modelo">
             </div>
           </div>
           <div class="col-sm-5 col-sm-offset-1">
             <div class="form-group label-floating">
               <label class="control-label">Ano</label>
-              <input type="text" class="form-control">
+              <input type="text" class="form-control" name="ano" id="ano">
             </div>
           </div>
           <div class="col-sm-5">
             <div class="form-group label-floating">
               <label class="control-label">Tipo</label>
-              <select class="form-control">
+              <select class="form-control" name="tipo" id="tipo">
                 <option disabled="" selected=""></option>
                 <option>Compacto</option>
                 <option>Médio</option>
