@@ -52,4 +52,35 @@
         </div>
     </form>
   </div>
+  <div>
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Id</th>
+          <th scope="col">Categoria</th>
+          <th scope="col">Modelo</th>
+          <th scope="col">Marca</th>
+          <th scope="col">Ano</th>
+          <th scope="col">Disponível</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for car in data %}
+          <tr>
+            <td>{{car[0]}}</td>
+            <td>{{car[1]}}</td>
+            <td>{{car[2]}}</td>
+            <td>{{car[3]}}</td>
+            <td>{{car[4]}}</td>
+            <td>{% if car[5]:%}
+              Sim
+               {%else:%}
+              Não
+              {%endif%} 
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
 {%endblock%}

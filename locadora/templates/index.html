@@ -3,5 +3,53 @@
 {% block title %}Aluguéis{% endblock %}
 
 {%block content%}
-  <h1>TEstee</h1>
+<form action="{{url_for('index')}}" method="GET">
+  <div class="tab-pane">
+    <div class="row">
+      <div class="col-sm-12">
+        <h4 class="info-text">Cadastro de Carro</h4>
+      </div>
+      <div class="col-sm-3 col-sm-offset-2">
+        <div class="form-group label-floating">
+          <label class="control-label">Data Inicial</label>
+          <input type="date" class="form-control" name="dataInicial" id="dataInicial">
+        </div>
+      </div>
+      <div class="col-sm-2">
+        <div class="form-group label-floating">
+          <label class="control-label">Período (Dias)</label>
+          <input type="number" class="form-control" name="numDias" id="numDias" min="1" value="1">
+        </div>
+      </div>      
+      <div class="col-sm-5">
+        <div class="form-group label-floating">
+          <div class="input-group">
+            <button type="submit" class="btn btn-primary btn-sm">Buscar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+</form>
+<div>
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Veículo</th>
+        <th scope="col">Categoria</th>
+        <th scope="col">Data Inicial</th>
+        <th scope="col">Numdias</th>
+        <th scope="col">Data Final</th>
+        <th scope="col">Valor</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for car in data %}
+        <tr>
+          <td>{{car[0]}}</td>
+          <td>{{car[1]}}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
 {%endblock%}
