@@ -12,6 +12,7 @@ app = Flask(__name__)
 #   if (conn == None):
 #     return "<h1>Deu erro</h1>"
 #   return "<h1>Deu certo</h1>"
+
 @app.route('/', methods=["GET"])
 def index():
   data=['teste1','teste2']
