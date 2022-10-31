@@ -1391,6 +1391,23 @@ select.form-control[multiple],
   transition: box-shadow 0.2s cubic-bezier(0.4, 0, 1, 1), background-color 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+.table {
+  margin-left: 10px;
+  width: 95%;
+}
+
+.table .btn {
+  margin-top: 0;
+}
+
+.table td, th {
+  text-align: center;
+}
+
+#veiculo {
+  padding-left: 0;
+}
+
 .btn::-moz-focus-inner {
   border: 0;
 }
@@ -2428,4 +2445,8 @@ fieldset[disabled] .checkbox input[type=checkbox],
   .btn-wd {
     min-width: 140px;
   }
+}
+
+table tbody tr td button{
+  margin-top: 0;
 }

@@ -1,0 +1,57 @@
+{% extends "layout.html" %}
+
+{% block title %}Clientes{% endblock %}
+
+{%block content%}
+<script>
+  function handleButtonDisable(id,payed) {
+    btnSubmit = document.getElementById(id);
+    console.log(btnSubmit);
+    if (payed == 0) {
+      btnSubmit.disabled = true;
+    }
+  }
+
+</script>
+<div id="client" class="tab-content">
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col">Veiculo</th>
+        <th scope="col">Categoria</th>
+        <th scope="col">Cliente</th>
+        <th scope="col">Data Inicial</th>
+        <th scope="col">Período (Dias)</th>
+        <th scope="col">Data Retorno</th>
+        <th scope="col">Valor Aluguel</th>
+        <th scope="col"></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for rent in data %}
+      <tr>
+        <td>{{rent[2]}}</td>
+        <td>{{rent[3]}}</td>
+        <td>{{rent[4]}}</td>
+        <td>{{rent[5]}}</td>
+        <td>{{rent[6]}}</td>
+        <td>{{rent[7]}}</td>
+        <td>R$ {{rent[9]}}</td>
+        <td>
+          <form action="{{url_for('payRent')}}" method="POST">
+            <input type="text" name="id_cliente" value="{{rent[0]}}" hidden>
+            <input type="text" name="id_veiculo" value="{{rent[1]}}" hidden>
+            <input type="text" name="dataInicial"  value="{{rent[5]}}" hidden>
+            <input id="{{loop.index}}" type="submit" class="btn btn-primary btn-sm" value="Pagar">
+          </form>
+          <script>
+            handleButtonDisable('{{loop.index}}','{{rent[8]}}');
+          </script>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{%endblock%}

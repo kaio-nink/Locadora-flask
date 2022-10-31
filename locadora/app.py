@@ -1,103 +1,137 @@
+from datetime import date
 from flask import Flask, render_template, request, redirect, url_for
 
-from database import dbConnect
-
+from database import callProcedure, executeQuery
 
 app = Flask(__name__)
 
-
-# @app.route('/')
-# def index():
-#   conn = dbConnect()
-#   if (conn == None):
-#     return "<h1>Deu erro</h1>"
-#   return "<h1>Deu certo</h1>"
-
 @app.route('/', methods=["GET"])
 def index():
-  data=['teste1','teste2']
-  if (request.method == "GET"):
-    initialDate = request.args.get('dataInicial')
-    numDays = request.args.get('numDias')
-    sql = ("select concat(marca, %s , modelo, %s, ano), tipo "
-            "from carro "
-            "where id_carro not in ("
-              "select id_carro "
-              "from aluguel "
-              "where dataInicial = %s AND adddate(dataInicial, numDias) <= adddate(dataInicial,%s))")
-    args = (" ", " ", initialDate, numDays)
-    conn = dbConnect()
-    cursor = conn.cursor()
-    cursor.execute(sql,args)
-    data = cursor.fetchall()
-    print(data[1])
-  return render_template('index.html', data=data)
+  initialDate = request.args.get('dataInicial')
+  numDays = request.args.get('numDias')
+
+  if (initialDate == None and numDays == None):
+    initialDate = date.today()
+    numDays = 1
+
+  query = ("SELECT id_veiculo, concat(marca, %s , modelo, %s, ano), categoria "
+          "from Veiculo "
+          "where disponivel = TRUE OR id_veiculo NOT IN ("
+            "SELECT id_veiculo "
+            "from Aluguel "
+            "where adddate(dataInicial, numDias) >= %s)")
+  params = (" ", " ", initialDate)
+  vehicles = executeQuery(query, params)
+
+  query = ("SELECT id_cliente, nome FROM Cliente")
+  clients = executeQuery(query)
+
+  if ( vehicles == False or clients == False ):
+    return
+
+  return render_template('index.html', initialDate=initialDate, numDays=numDays, vehicles=vehicles, clients=clients)
+
+@app.route('/registerRent', methods=['POST'])
+def registerRent():
+  idVehicle = request.form['idVeiculo']
+  idClient = request.form['idCliente']
+  initalDate = request.form['dataReserva']
+  numDays = request.form['diasReserva']
+  params = (idClient, idVehicle, initalDate, numDays)
+
+  result = callProcedure('cadastrarAluguel', params)
+  if (not(result)):
+    return
+
+  return redirect(url_for('index'))
+
+@app.route('/rents')
+def rents():
+  query = ("SELECT * FROM relatorioAluguel")
+  result = executeQuery(query)
+  if ( result == False ):
+    return
+  result = getRentValue(result)
+  print(result)
+
+  return render_template('rent.html', data=result)
+
+@app.route('/payRent', methods=['POST'])
+def payRent():
+  idClient = request.form['id_cliente']
+  idVehicle = request.form['id_veiculo']
+  initialDate = request.form['dataInicial']
+  params = (idClient, idVehicle, initialDate)
+  
+  result = callProcedure('pagarAluguel', params)
+  if not(result):
+      return "<h1>Deu ruim</h1>"
+  
+  return redirect(url_for('rents'))
 
 @app.route('/client')
 def client():
-  dbConn = dbConnect()
-  if (dbConn == None):
-    return "<h1>Erro ao conectar com o BD</h1>"
+  query = ("SELECT * FROM Cliente")
+  result = executeQuery(query)
 
-  cursor = dbConn.cursor()
-  cursor.execute(("SELECT * FROM cliente"))
-  data = cursor.fetchall()
-  cursor.close()
-  dbConn.close()
+  if (result == False):
+    return
 
-  return render_template('client.html', data=data)
+  return render_template('client.html', data=result)
 
 @app.route('/registerClient', methods=['POST'])
 def registerClient():
-  dbConn = dbConnect()
-  if (dbConn == None):
-    return "<h1>Erro ao cadastrar cliente</h1>"
-
   name = request.form['nome']
   phone = request.form['telefone']
+  params = (name, phone)
 
-  cursor = dbConn.cursor()
-  cursor.callproc('cadastrarCliente', (name, phone))
-  dbConn.commit()
+  result = callProcedure('cadastrarCliente', params)
+  if not(result):
+    return "<h1>Deu ruim</h1>"
 
-  cursor.close()
-  dbConn.close()
-  
   return redirect(url_for('client'))
+  
 
-@app.route('/cars')
-def cars():
-  dbConn = dbConnect()
-  if (dbConn == None):
-    return "<h1>Erro ao conectar com o BD</h1>"
+@app.route('/vehicles')
+def vehicles():
+  query = ("SELECT * FROM Veiculo")
+  vehicles = executeQuery(query, None)
 
-  cursor = dbConn.cursor()
-  cursor.execute(("SELECT * FROM carro"))
-  data = cursor.fetchall()
-  cursor.close()
-  dbConn.close()
-  return render_template('cars.html', data=data)
+  query = ("SELECT categoria FROM Categoria_veiculo")
+  categories = executeQuery(query)
 
-@app.route('/registerCar', methods=['POST'])
-def registerCar():
-  dbConn = dbConnect()
-  if (dbConn == None):
-    return "<h1>Erro ao cadastrar novo carro</h1>"
+  if (vehicles == False or categories == False):
+    return
 
+  return render_template('vehicles.html', data=vehicles, categories=categories)
+
+
+@app.route('/registerVehicle', methods=['POST'])
+def registerVehicle():
   brand = request.form['marca']
   model = request.form['modelo']
   year = request.form['ano']
-  type = request.form['tipo']
-
-  cursor = dbConn.cursor()
-  cursor.callproc('cadastrarCarro', (type, model, brand, year, True))
-  dbConn.commit()
+  category = request.form['tipo']
+  params = (brand, model, category, year)
   
-  cursor.close()
-  dbConn.close()
+  result = callProcedure('cadastrarVeiculo', params)
+  if not(result):
+      return "<h1>Deu ruim</h1>"
   
-  return redirect(url_for('client'))
+  return redirect(url_for('vehicles'))
 
 @app.route('/test')
 def test():
   return render_template('test.html')
+
+def getRentValue(result):
+  query = ('SELECT valorAluguel(%s,%s)')
+  newList = []
+  
+  for rent in result:
+    queryParams = (rent[3],rent[6])
+    rentValue = executeQuery(query, queryParams)
+    rent += (rentValue[0])
+    newList.append(rent)
+
+  return newList

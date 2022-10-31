@@ -3,22 +3,35 @@
 {% block title %}Aluguéis{% endblock %}
 
 {%block content%}
+<script>
+  function handleTableValues() {
+    const rowId = event.target.parentNode.parentNode.id;
+    const rowData = document.getElementById(rowId).querySelectorAll("td");
+    
+    document.getElementById('idVeiculo').setAttribute('value',rowId)
+    document.getElementById('veiculo').setAttribute('value',rowData[0].innerHTML)
+  }
+  function handleClientId() {
+    const selectedClient = document.getElementById('clientes')
+    document.getElementById('idCliente').setAttribute('value', selectedClient.selectedIndex)
+  }
+</script>
 <form action="{{url_for('index')}}" method="GET">
   <div class="tab-pane">
     <div class="row">
       <div class="col-sm-12">
-        <h4 class="info-text">Cadastro de Carro</h4>
+        <h4 class="info-text">Consultar veículos</h4>
       </div>
       <div class="col-sm-3 col-sm-offset-2">
         <div class="form-group label-floating">
           <label class="control-label">Data Inicial</label>
-          <input type="date" class="form-control" name="dataInicial" id="dataInicial">
+          <input type="date" class="form-control" name="dataInicial" id="dataInicial" value="{{initialDate}}">
         </div>
       </div>
       <div class="col-sm-2">
         <div class="form-group label-floating">
           <label class="control-label">Período (Dias)</label>
-          <input type="number" class="form-control" name="numDias" id="numDias" min="1" value="1">
+          <input type="number" class="form-control" name="numDias" id="numDias" min="1" value="{{numDays}}">
         </div>
       </div>      
       <div class="col-sm-5">
@@ -31,25 +44,70 @@
     </div>
 </form>
 <div>
-  <table class="table">
+  <table class="table table-sm">
     <thead>
       <tr>
         <th scope="col">Veículo</th>
         <th scope="col">Categoria</th>
-        <th scope="col">Data Inicial</th>
-        <th scope="col">Numdias</th>
-        <th scope="col">Data Final</th>
-        <th scope="col">Valor</th>
+        <th scope="col"></th>
       </tr>
     </thead>
     <tbody>
-      {% for car in data %}
-        <tr>
-          <td>{{car[0]}}</td>
-          <td>{{car[1]}}</td>
+      {% for vehicle in vehicles %}
+        <tr id="{{vehicle[0]}}">
+          <td scope="col">{{vehicle[1]}}</td>
+          <td scope="col">{{vehicle[2]}}</td>
+          <td scope="col" align="center"><button type="button" onclick="handleTableValues()" class="btn btn-secondary btn-sm">Reservar</button></td>
         </tr>
       {% endfor %}
     </tbody>
   </table>
 </div>
+<div class="col-sm-12">
+  <h4 class="info-text">Cadastrar aluguel</h4>
+</div>
+<form action="{{url_for('registerRent')}}" method="POST">
+  <div class="tab-pane">
+    <div class="row">
+      <div class="col-sm-5 col-sm-offset-1">
+        <div class="label-floating">
+          <label class="control-label">Veículo</label>
+          <input type="text" class="form-control" name="veiculo" id="veiculo" disabled>
+        </div>
+      </div> 
+      <div class="col-sm-5">
+        <div class="form-group label-floating">
+          <label class="control-label">Cliente</label>
+          <select class="form-control" name="clientes" id="clientes" required onchange="handleClientId()">
+            <option disabled="" selected=""></option>
+            {% for client in clients%}
+            <option id="{{client[0]}}">{{client[1]}}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </div> 
+      <div class="col-sm-3 col-sm-offset-1">
+        <div class="form-group label-floating">
+          <label class="control-label">Data Inicial</label>
+          <input type="date" class="form-control" name="dataReserva" id="dataReserva" value="{{initialDate}}" readonly>
+        </div>
+      </div>
+      <div class="col-sm-2">
+        <div class="form-group label-floating">
+          <label class="control-label">Período (Dias)</label>
+          <input type="number" class="form-control" name="diasReserva" id="diasReserva" min="1" value="{{numDays}}" readonly>
+        </div>
+      </div>  
+      <input type="text" name="idVeiculo" id="idVeiculo" hidden>
+      <input type="text" name="idCliente" id="idCliente" hidden>
+      <div class="col-sm-6">
+        <div class="form-group label-floating">
+          <div class="input-group">
+            <button type="submit" class="btn btn-primary">Cadastrar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+</form>
 {%endblock%}
+

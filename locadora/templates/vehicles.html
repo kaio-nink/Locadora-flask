@@ -1,14 +1,14 @@
 {% extends "layout.html" %}
 
-{% block title %}Carros{% endblock %}
+{% block title %}Cadastro de Veículos{% endblock %}
 
 {%block content%}
   <div id="car" class="tab-content">
-    <form action="{{url_for('registerCar')}}" method="POST">
+    <form action="{{url_for('registerVehicle')}}" method="POST">
       <div class="tab-pane">
         <div class="row">
           <div class="col-sm-12">
-            <h4 class="info-text">Cadastro de Carro</h4>
+            <h4 class="info-text">Cadastro de Veículos</h4>
           </div>
           <div class="col-sm-5 col-sm-offset-1">
             <div class="form-group label-floating">
@@ -33,12 +33,9 @@
               <label class="control-label">Tipo</label>
               <select class="form-control" name="tipo" id="tipo">
                 <option disabled="" selected=""></option>
-                <option>Compacto</option>
-                <option>Médio</option>
-                <option>Grande</option>
-                <option>SUV</option>
-                <option>Caminhão</option>
-                <option>VAN</option>
+                {% for category in categories%}
+                <option>{{category[0]}}</option>
+                {% endfor %}
               </select>
             </div>
           </div>
