@@ -25,3 +25,43 @@ def dbConnect():
       print("Banco de dados não encontrado")
       
     return None
+
+def closeConnection(dbConnection, dbCursor):
+  dbCursor.close()
+  dbConnection.close()
+
+def callProcedure(procName: str, procParams: tuple):
+  dbConnection = dbConnect()
+  if (dbConnection == None):
+    raise Exception('Erro na conexão com o banco de dados')
+  try:
+    dbCursor = dbConnection.cursor()
+    dbCursor.callproc(procName, procParams)
+    dbConnection.commit()
+
+    closeConnection(dbConnection, dbCursor)
+  except Exception as ex:
+    print(ex)
+    return False
+  return True
+  
+def executeQuery(query, queryParams = None):
+  dbConnection = dbConnect()
+  if (dbConnection == None):
+    raise Exception('Erro na conexão com o banco de dados')
+  result = None
+  try:
+    dbCursor = dbConnection.cursor()
+    if (queryParams == None):
+      dbCursor.execute(query)
+    else:
+      dbCursor.execute(query, queryParams)
+
+    result = dbCursor.fetchall()
+
+    closeConnection(dbConnection, dbCursor)
+  except Exception as ex:
+    print(ex)
+    return False
+
+  return result
