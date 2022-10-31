@@ -2,7 +2,7 @@ create database if not exists Locadora;
 use Locadora;
 
 
-create table if not exists cliente
+create table if not exists Cliente
 (
     id_cliente int auto_increment,
     nome varchar(30) not null,
@@ -10,33 +10,34 @@ create table if not exists cliente
     primary key(id_cliente)
 );
 
-create table if not exists tipo_carro
+create table if not exists Categoria_veiculo
 (
-    tipo varchar(15),
+    categoria varchar(15),
     valorDiaria numeric(5,2) not null,
     valorSemanal numeric(7,2) not null,
-    primary key(tipo)
+    primary key(categoria)
 );
 
-create table if not exists carro
+create table if not exists Veiculo
 (
-    id_carro int auto_increment,
-    tipo varchar(15),
+    id_veiculo int auto_increment,
+    marca varchar(10) not null,   
     modelo varchar(15) not null,
-    marca varchar(10) not null,        
+    categoria varchar(15),
     ano varchar(4) not null,
-    disponivel Boolean not null,   
-    primary key (id_carro),
-    foreign key(tipo) references tipo_carro(tipo)
+    disponivel Boolean not null default TRUE,   
+    primary key (id_veiculo),
+    foreign key(categoria) references Categoria_veiculo(categoria)
 );
 
-create table if not exists aluguel
+create table if not exists Aluguel
 (
     id_cliente int,
-    id_carro int,
+    id_veiculo int,
     dataInicial date,
     numDias int,
-    primary key(id_cliente, id_carro, dataInicial),
-    foreign key(id_cliente) references cliente(id_cliente),
-    foreign key(id_carro) references carro(id_carro)
+    pendente boolean default TRUE,
+    primary key(id_cliente, id_veiculo, dataInicial),
+    foreign key(id_cliente) references Cliente(id_cliente),
+    foreign key(id_veiculo) references Veiculo(id_veiculo)
 );

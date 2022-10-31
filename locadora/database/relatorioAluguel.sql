@@ -1,5 +1,5 @@
-create view relatorioAluguel(tipo, veiculo, nome, dataInicial, numDias, dataRetorno) as
+CREATE VIEW relatorioAluguel(id_cliente, id_veiculo, veiculo, categoria, nome, dataInicial, numDias, dataRetorno, pendente) as
 (
-    select tipo, concat(marca , " " , modelo, " " , ano) as veiculo, nome, dataInicial, numDias, date_add(dataInicial, interval numDias day) as dataRetorno
-    from aluguel natural join carro natural join tipo_carro natural join cliente
+    select id_cliente, id_veiculo, concat(marca , " " , modelo, " " , ano) as veiculo, categoria, nome,  dataInicial, numDias, date_add(dataInicial, interval numDias day) as dataRetorno, pendente
+    from Aluguel natural join Veiculo natural join Categoria_veiculo natural join Cliente
 );
