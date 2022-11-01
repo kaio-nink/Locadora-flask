@@ -14,21 +14,22 @@ def index():
     initialDate = date.today()
     numDays = 1
 
-  query = ("SELECT id_veiculo, concat(marca, %s , modelo, %s, ano), categoria "
-          "from Veiculo "
-          "where disponivel = TRUE OR id_veiculo NOT IN ("
-            "SELECT id_veiculo "
-            "from Aluguel "
-            "where adddate(dataInicial, numDias) >= %s)")
-  params = (" ", " ", initialDate)
-  vehicles = executeQuery(query, params)
+  query2 = ("SELECT v.id_veiculo, concat(v.marca, %s , v.modelo, %s, v.ano), v.categoria "
+            "FROM Veiculo v LEFT JOIN Aluguel a ON a.id_veiculo = v.id_veiculo "
+            "WHERE a.id_veiculo is null OR v.disponivel = TRUE "
+            "UNION SELECT v.id_veiculo, concat(v.marca, %s , v.modelo, %s, v.ano), v.categoria "
+            "FROM Veiculo AS v INNER JOIN Aluguel AS a on v.id_veiculo = a.id_veiculo "
+            "WHERE (a.dataInicial > date_add(%s, interval %s day) OR date_add(a.dataInicial, interval a.numDias day) < %s)")
+
+  params = (" "," "," "," ",initialDate, numDays, initialDate)
+  vehicles = executeQuery(query2, params)
 
   query = ("SELECT id_cliente, nome FROM Cliente")
   clients = executeQuery(query)
 
   if ( vehicles == False or clients == False ):
     return
-
+  print(vehicles)
   return render_template('index.html', initialDate=initialDate, numDays=numDays, vehicles=vehicles, clients=clients)
 
 @app.route('/registerRent', methods=['POST'])
@@ -52,7 +53,6 @@ def rents():
   if ( result == False ):
     return
   result = getRentValue(result)
-  print(result)
 
   return render_template('rent.html', data=result)
 
@@ -120,9 +120,28 @@ def registerVehicle():
   
   return redirect(url_for('vehicles'))
 
-@app.route('/test')
-def test():
-  return render_template('test.html')
+@app.route('/categories')
+def categories():
+  query = ('SELECT * FROM Categoria_veiculo')
+  result = executeQuery(query)
+
+  if (result == False):
+    return
+
+  return render_template('categories.html', data=result)
+
+@app.route('/registerCategory', methods=['POST'])
+def registerCategory():
+  category = request.form['categoria']
+  dailyValue = request.form['valorDiaria']
+  weeklyValue = request.form['valorSemanal']
+  params = (category, dailyValue, weeklyValue)
+  print(weeklyValue)
+  result = callProcedure('cadastrarCategoria', params)
+  if not(result):
+      return "<h1>Deu ruim</h1>"
+  
+  return redirect(url_for('categories'))
 
 def getRentValue(result):
   query = ('SELECT valorAluguel(%s,%s)')

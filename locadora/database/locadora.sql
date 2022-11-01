@@ -14,7 +14,7 @@ create table if not exists Categoria_veiculo
 (
     categoria varchar(15),
     valorDiaria numeric(5,2) not null,
-    valorSemanal numeric(7,2) not null,
+    valorSemanal numeric(10,2) not null,
     primary key(categoria)
 );
 
