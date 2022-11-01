@@ -1,0 +1,83 @@
+{% extends "layout.html" %}
+
+{% block title %}Cadastro de Veículos{% endblock %}
+
+{%block content%}
+  <div id="car" class="tab-content">
+    <form action="{{url_for('registerVehicle')}}" method="POST">
+      <div class="tab-pane">
+        <div class="row">
+          <div class="col-sm-12">
+            <h4 class="info-text">Cadastro de Veículos</h4>
+          </div>
+          <div class="col-sm-5 col-sm-offset-1">
+            <div class="form-group label-floating">
+              <label class="control-label">Marca</label>
+              <input type="text" class="form-control" name="marca" id="marca">
+            </div>
+          </div>
+          <div class="col-sm-5">
+            <div class="form-group label-floating">
+              <label class="control-label">Modelo</label>
+              <input type="text" class="form-control" name="modelo" id="modelo">
+            </div>
+          </div>
+          <div class="col-sm-5 col-sm-offset-1">
+            <div class="form-group label-floating">
+              <label class="control-label">Ano</label>
+              <input type="text" class="form-control" name="ano" id="ano">
+            </div>
+          </div>
+          <div class="col-sm-5">
+            <div class="form-group label-floating">
+              <label class="control-label">Tipo</label>
+              <select class="form-control" name="tipo" id="tipo">
+                <option disabled="" selected=""></option>
+                {% for category in categories%}
+                <option>{{category[0]}}</option>
+                {% endfor %}
+              </select>
+            </div>
+          </div>
+          <div class="col-sm-5 col-sm-offset-8">
+            <div class="form-group label-floating">
+              <div class="input-group">
+                <button type="submit" class="btn btn-primary">Cadastrar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+    </form>
+  </div>
+  <div>
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Id</th>
+          <th scope="col">Categoria</th>
+          <th scope="col">Modelo</th>
+          <th scope="col">Marca</th>
+          <th scope="col">Ano</th>
+          <th scope="col">Disponível</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for car in data %}
+          <tr>
+            <td>{{car[0]}}</td>
+            <td>{{car[1]}}</td>
+            <td>{{car[2]}}</td>
+            <td>{{car[3]}}</td>
+            <td>{{car[4]}}</td>
+            <td>{% if car[5]:%}
+              Sim
+               {%else:%}
+              Não
+              {%endif%} 
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{%endblock%}

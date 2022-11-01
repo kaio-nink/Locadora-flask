@@ -1,0 +1,62 @@
+{% extends "layout.html" %}
+
+{% block title %}Categorias{% endblock %}
+
+{%block content%}
+  <div id="category" class="tab-content">
+    <form action="{{url_for('registerCategory')}}" method="POST">
+      <div class="tab-pane">
+        <div class="row">
+          <div class="col-sm-12">
+            <h4 class="info-text">Cadastro de Categoria</h4>
+          </div>
+          <div class="col-sm-5 ">
+            <div class="form-group label-floating">
+              <label class="control-label">Categoria</label>
+              <input type="text" class="form-control" name="categoria" id="categoria">
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="form-group label-floating">
+              <label class="control-label">Valor diária</label>
+              <input type="number" class="form-control" name="valorDiaria" id="valorDiaria" step="0.01" min="0.00">
+            </div>
+          </div>
+          <div class="col-sm-3">
+            <div class="form-group label-floating">
+              <label class="control-label">Valor Semanal</label>
+              <input type="number" class="form-control" name="valorSemanal" id="valorSemanal" step="0.01" min="0.00">
+            </div>
+          </div>
+          <div class="col-sm-5 col-sm-offset-9">
+            <div class="form-group label-floating">
+              <div class="input-group">
+                <button type="submit" class="btn btn-primary">Cadastrar</button>
+              </div>
+            </div>
+          </div>
+        </div>
+    </form>
+  </div>
+  <div>
+    <table class="table">
+      <thead>
+        <tr>
+          <th scope="col">Categoria</th>
+          <th scope="col">Valor Diaria</th>
+          <th scope="col">Valor Semanal</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for category in data %}
+          <tr>
+            <td>{{category[0]}}</td>
+            <td>R$ {{category[1]}}</td>
+            <td>R$ {{category[2]}}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+{%endblock%}
